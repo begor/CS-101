@@ -1,12 +1,15 @@
-# Builds a simple data structure to hold all the connections passed as a string
-# Example input:
-# "John is connected to Bryant, Debra, Walter.\
-#  John likes to play The Movie: The Game, The Legend of Corgi, Dinosaur Diner.\"
-# Example output:
-# {'John': { 
-#		'connections': ['Bryant', 'Debra', 'Walter'], 
-#		'games': ['The Movie: The Game', 'The Legend of Corgi', 'Dinosaur Diner'] }
+"""
+Builds a simple data structure to hold all the connections passed as a string
 
+Example input:
+ "John is connected to Bryant, Debra, Walter.\
+  John likes to play The Movie: The Game, The Legend of Corgi, Dinosaur Diner.\"
+
+Example output:
+ {'John': { 
+		'connections': ['Bryant', 'Debra', 'Walter'], 
+		'games': ['The Movie: The Game', 'The Legend of Corgi', 'Dinosaur Diner'] }
+"""
 def create_data_structure(connections_string):
     network = {}
     
@@ -31,6 +34,28 @@ def create_data_structure(connections_string):
 
     #Finally we return our data structure
     return network
+
+"""
+Procedure that parses given Connections and Games string
+and returns person's name and info.
+Given strings should be in following format:
+	Connections: "John is connected to Bryant, Debra, Walter"
+	Games: "John likes to play The Movie: The Game, The Legend of Corgi, Dinosaur Diner"
+"""
+def get_person_info(connections, games):
+	name = connections[:connections.find(" ")]
+
+	#Find people that connected to given person
+	connected_position = connections.find('to ')
+	connections = connections[connected_position + len('to') + 1:].split(', ')
+
+	#Find games that given person likes
+	games_position = games.find('play')
+	games = games[games_position + len('play') + 1:].split(', ')
+
+	info = {'connections': connections, 'games': games}
+	
+    return name, info
 
 
         
