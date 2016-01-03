@@ -1,0 +1,37 @@
+# Builds a simple data structure to hold all the connections passed as a string
+# Example input:
+# "John is connected to Bryant, Debra, Walter.\
+#  John likes to play The Movie: The Game, The Legend of Corgi, Dinosaur Diner.\"
+# Example output:
+# {'John': { 
+#		'connections': ['Bryant', 'Debra', 'Walter'], 
+#		'games': ['The Movie: The Game', 'The Legend of Corgi', 'Dinosaur Diner'] }
+
+def create_data_structure(connections_string):
+    network = {}
+    
+    #Find first person's likes and connections sentences
+    connections_sentence_end = connections_string.find(".")
+    likes_sentence_end = connections_string.find(".", connections_sentence_end + 1)
+    
+    #While loop until there is no more people in our network
+    while (connections_sentence_end != -1):
+        person_connections = connections_string[:connections_sentence_end]
+        person_likes = connections_string[connections_sentence_end+1:likes_sentence_end]
+        
+        #All of the work on parsing person's info is in this procedure
+        name, person_info = get_person_info(person_connections, person_likes)
+        network[name] = person_info
+        
+        #Now we remove parsed person from connections_string
+        #And find next person to proceed
+        connections_string = connections_string[likes_sentence_end + 1:]
+        connections_sentence_end = connections_string.find(".")
+        likes_sentence_end = connections_string.find(".", connections_sentence_end + 1)
+
+    #Finally we return our data structure
+    return network
+
+
+        
+        
