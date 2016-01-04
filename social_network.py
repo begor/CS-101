@@ -57,6 +57,59 @@ def get_person_info(connections, games):
 	
     return name, info
 
+# get_connections(network, user): 
+#   Returns a list of all the connections that user has
+#
+# Arguments: 
+#   network: the gamer network data structure
+#   user:    a string containing the name of the user
+# 
+# Return: 
+#   A list of all connections the user has.
+#   - If the user has no connections, return an empty list.
+#   - If the user is not in network, return None.
+def get_connections(network, user):
+    return network[user]['connections']
+
+# ----------------------------------------------------------------------------- 
+# get_games_liked(network, user): 
+#   Returns a list of all the games a user likes
+#
+# Arguments: 
+#   network: the gamer network data structure
+#   user:    a string containing the name of the user
+# 
+# Return: 
+#   A list of all games the user likes.
+#   - If the user likes no games, return an empty list.
+#   - If the user is not in network, return None.
+def get_games_liked(network,user):
+    return network[user]['games']
+
+# ----------------------------------------------------------------------------- 
+# add_connection(network, user_A, user_B): 
+#   Adds a connection from user_A to user_B. Make sure to check that both users 
+#   exist in network.
+# 
+# Arguments: 
+#   network: the gamer network data structure 
+#   user_A:  a string with the name of the user the connection is from
+#   user_B:  a string with the name of the user the connection is to
+#
+# Return: 
+#   The updated network with the new connection added.
+#   - If a connection already exists from user_A to user_B, return network unchanged.
+#   - If user_A or user_B is not in network, return False.
+def add_connection(network, user_A, user_B):
+    if user_A not in network or user_B not in network:
+        return False
+
+    if user_B in network[user_A]['connections']:
+        return network
+
+    network[user_A]['connections'].append(user_B)
+
+    return network
 
         
         
