@@ -129,11 +129,48 @@ def add_connection(network, user_A, user_B):
 #   should have no connections.
 #   - If the user already exists in network, return network *UNCHANGED* (do not change
 #     the user's game preferences)
-def add_new_user(network, user, games):
+def get_secondary_connections(network, user):
     if user not in network:
-        network[user] = {'connections': [], 'games': games}
+        return None
 
-    return network
+    secondary_connections = []
 
+    for connection in network[user]['connections']:
+        secondary = network[connection]['connections']
+        if secondary not in secondary_connections:
+            secondary_connections += secondary
+
+    return secondary_connections
+
+
+# ----------------------------------------------------------------------------- 
+# get_secondary_connections(network, user): 
+#   Finds all the secondary connections (i.e. connections of connections) of a 
+#   given user.
+# 
+# Arguments: 
+#   network: the gamer network data structure
+#   user:    a string containing the name of the user
+#
+# Return: 
+#   A list containing the secondary connections (connections of connections).
+#   - If the user is not in the network, return None.
+#   - If a user has no primary connections to begin with, return an empty list.
+# 
+# NOTE: 
+#   It is OK if a user's list of secondary connections includes the user 
+#   himself/herself. It is also OK if the list contains a user's primary 
+#   connection that is a secondary connection as well.
+def get_secondary_connections(network, user):
+    if user not in network:
+        return None
+
+    secondary_connections = []
+
+    for connection in network[user]['connections']:
+        secondary_connections += connection['Connections']
+
+    return secondary_connections
+    
         
         
