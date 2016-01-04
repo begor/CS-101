@@ -171,6 +171,23 @@ def get_secondary_connections(network, user):
         secondary_connections += connection['Connections']
 
     return secondary_connections
-    
+
+# -----------------------------------------------------------------------------     
+# count_common_connections(network, user_A, user_B): 
+#   Finds the number of people that user_A and user_B have in common.
+#  
+# Arguments: 
+#   network: the gamer network data structure
+#   user_A:  a string containing the name of user_A
+#   user_B:  a string containing the name of user_B
+#
+# Return: 
+#   The number of connections in common (as an integer).
+#   - If user_A or user_B is not in network, return False.
+def count_common_connections(network, user_A, user_B):
+    if user_A not in network or user_A not in network:
+        return False
+
+    return len([el for el in network[user_A]['connections'] if el in network[user_B]['connections']])
         
         
