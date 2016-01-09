@@ -302,39 +302,31 @@ def count_common_connections(network, user_A, user_B):
 #   in this procedure to keep track of nodes already visited in your search. You
 #   may safely add default parameters since all calls used in the grading script
 #   will only include the arguments network, user_A, and user_B.
-def find_path_to_friend(network, user_A, user_B, nodes_visited = None, result = None, begin = None):
+def find_path_to_friend(network, user_A, user_B, visited = None):
+    result = []
+
     if user_A not in network or user_B not in network:
         return None
 
-    #since changes made to lists will be preserved across procedure calls
-    #we should first set it to None
-    if nodes_visited is None:
-        nodes_visited = []
+    if visited == None:
+        visited = []
 
-    if result is None:
-        result = []
+    connections = network[user_A]['connections']
+    visited.append(user_A)
+    if len(connections) > 0:
+        if user_B in connections:
+            result += [user_A, user_B]
+            return result
+        else:
+            for user in connections:
+                if user not in visited:
+                    test = find_path_to_friend(network, user, user_B, visited)
+                    if test is not None:
+                        result += test
+                        result = [user_A] + result
+                        return result
 
-    if begin is None:
-        begin = user_A
-
-    nodes_visited.append(user_A)
-    connections = get_connections(network, user_A)
-    if user_B in connections:
-        result.append(user_A)
-        result.append(user_B)
-        if begin not in result:
-            result.insert(0, begin)
-        print result
-        return result
-
-    for connection in connections:
-        if connection not in nodes_visited:
-            return find_path_to_friend(network, connection, user_B, nodes_visited, result, begin)
-
-    if len(result) == 0:
-        return None
-
-    return result
+    return None
 
 # Make-Your-Own-Procedure (MYOP)
 # -----------------------------------------------------------------------------
