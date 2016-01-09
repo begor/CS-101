@@ -92,6 +92,10 @@ Freda likes to play Starfleet Commander, Ninja Hamsters, Seahorse Adventures."
 # Return:
 #   The newly created network data structure
 def create_data_structure(connections_string):
+    """
+    Our data structure will look like this:
+        network = {'person': {'connections': [...], 'games': [...]}}
+    """
     network = {}
 
     #Find first person's likes and connections sentences
@@ -101,14 +105,13 @@ def create_data_structure(connections_string):
     #While loop until there is no more people in our network
     while (connections_sentence_end != -1):
         person_connections = connections_string[:connections_sentence_end]
-        person_likes = connections_string[connections_sentence_end+1:likes_sentence_end]
+        person_likes = connections_string[connections_sentence_end + 1:likes_sentence_end]
 
         #All of the work on parsing person's info is in this procedure
         name, person_info = get_person_info(person_connections, person_likes)
         network[name] = person_info
 
-        #Now we remove parsed person from connections_string
-        #And find next person to proceed
+        #Now we remove parsed person from connections_string and proceed
         connections_string = connections_string[likes_sentence_end + 1:]
         connections_sentence_end = connections_string.find(".")
         likes_sentence_end = connections_string.find(".", connections_sentence_end + 1)
@@ -249,7 +252,7 @@ def get_secondary_connections(network, user):
         secondary = network[connection]['connections']
         secondary_connections += secondary
 
-    #return set converted to list to be sure that there is no duplications
+    #return set converted to list to be sure that there is no duplicates
     return list(set(secondary_connections))
 
 # -----------------------------------------------------------------------------
@@ -268,7 +271,10 @@ def count_common_connections(network, user_A, user_B):
     if user_A not in network or user_B not in network:
         return False
 
-    return len([el for el in network[user_A]['connections'] if el in network[user_B]['connections']])
+    #using generator to find common connections_string
+    common_connections = [el for el in network[user_A]['connections'] if el in network[user_B]['connections']]
+
+    return len(common_connections)
 
 # -----------------------------------------------------------------------------
 # find_path_to_friend(network, user_A, user_B):
@@ -308,32 +314,34 @@ def find_path_to_friend(network, user_A, user_B, visited = None):
     if user_A not in network or user_B not in network:
         return None
 
+    #Udacity's testing system requirement
     if visited == None:
         visited = []
 
+    #Find direct connections of user_A and mark him as visited
     connections = network[user_A]['connections']
     visited.append(user_A)
+
+    #if user_A has connections we iterate through them
     if len(connections) > 0:
         if user_B in connections:
             result += [user_A, user_B]
+
+            #nothing to do more, just return a result, since there is a path from A to B
             return result
+
+        #if there is no path, we look recursively through secondary connections
         else:
             for user in connections:
                 if user not in visited:
-                    test = find_path_to_friend(network, user, user_B, visited)
-                    if test is not None:
-                        result += test
-                        result = [user_A] + result
+
+                    #try to find a path
+                    test_path = find_path_to_friend(network, user, user_B, visited)
+                    if test_path is not None:
+                        result = [user_A] + result + test_path
+
+                        #nothing to do more, just return a result, since there is a path from user to B
                         return result
 
+    #if there is no path, we simply return None
     return None
-
-# Make-Your-Own-Procedure (MYOP)
-# -----------------------------------------------------------------------------
-# Your MYOP should either perform some manipulation of your network data
-# structure (like add_new_user) or it should perform some valuable analysis of
-# your network (like path_to_friend). Don't forget to comment your MYOP. You
-# may give this procedure any name you want.
-
-# Replace this with your own procedure! You can also uncomment the lines below
-# to see how your code behaves. Have fun!
